@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 21:03:00 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/15 19:25:54 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/21 12:56:04 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,24 +63,24 @@ void	ft_putps1(char *ps1, t_env *lenv)
 		else
 			ft_putchar(ps1[i++]);
 	}
+	ft_putchar(' ');
 }
 
-void	ft_sh1(char **env)
+void	ft_sh1(char **env, int	fd)
 {
 	char	*buf;
 	char	**path;
 	t_env	*lenv;
 
-	lenv = ft_list_env(env);
 	buf = NULL;
+	lenv = ft_list_env(env);
 	ft_command_setenv(lenv, "setenv PS1 $>");
 	path = ft_strsplit(ft_return_env(lenv, "PATH"), ':');
-	ft_putps1(ft_return_env(lenv, "PS1"), lenv);
-	while (get_next_line(0, &buf))
+	fd == 0 ? ft_putps1(ft_return_env(lenv, "PS1"), lenv) : 1;
+	while (get_next_line(fd, &buf) || !(*buf))
 	{
-		if ((ft_entry(buf, &lenv, path) != 0))
-			ft_error(buf, 1);
-		ft_putps1(ft_return_env(lenv, "PS1"), lenv);
+		ft_entry(buf, &lenv, path);
+		fd == 0 ? ft_putps1(ft_return_env(lenv, "PS1"), lenv) : 1;
 		ft_strdeld(&path);
 		path = ft_strsplit(ft_return_env(lenv, "PATH"), ':');
 		ft_strdel(&buf);
@@ -91,11 +91,14 @@ int		main(int ac, char **av, char **env)
 {
 	struct sigaction sig;
 
-	(void)ac;
-	(void)av;
-	sig.sa_flags = 0;
-	sig.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &sig, NULL);
-	ft_sh1(env);
+	if (ac == 1)
+	{
+		sig.sa_flags = 0;
+		sig.sa_handler = SIG_IGN;
+		sigaction(SIGINT, &sig, NULL);
+		ft_sh1(env, 0);
+	}
+	else
+		ft_treat_file(av[1], env);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 01:29:36 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/15 20:19:39 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/20 14:32:33 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,19 @@ void	ft_error(char *command, int error)
 	{
 		ft_putstr_fd(commande[0], 2);
 		ft_putendl_fd(" : Commande inconnue", 2);
+	}
+	if (error == 2)
+	{
+
+		ft_putstr_fd("nsh : ", 2);
+		ft_putstr_fd(commande[0], 2);
+		ft_putendl_fd(" : Executable introuvable ou invalide", 2);
+		exit(EXIT_FAILURE);
+	}
+	if (error == 3)
+	{
+		ft_putstr_fd(commande[0], 2);
+		ft_putendl_fd(" : Argument invalide", 2);
 	}
 	ft_strdeld(&commande);
 }

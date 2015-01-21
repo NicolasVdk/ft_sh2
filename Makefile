@@ -6,7 +6,7 @@
 #    By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/12 20:54:52 by nverdonc          #+#    #+#              #
-#    Updated: 2015/01/19 15:00:40 by nverdonc         ###   ########.fr        #
+#    Updated: 2015/01/20 13:23:24 by nverdonc         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -17,7 +17,8 @@ SRC			= ft_sh1.c \
 				ft_command.c \
 				ft_second.c \
 				ft_verif.c \
-				get_next_line.c
+				get_next_line.c \
+				ft_treat.c
 OBJ			= $(SRC:.c=.o)
 CC			= /usr/bin/gcc
 CFLAGS		= -Wall -Wextra -Werror

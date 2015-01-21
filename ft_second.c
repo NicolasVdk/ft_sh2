@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 07:56:33 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/15 20:04:09 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/21 15:50:55 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,25 +92,17 @@ void	ft_pwd_change(char *newpwd, t_env *lenv)
 
 void	ft_basic_process(char *command, t_env *lenv)
 {
-	pid_t				pid;
-	char				**av;
-	char				**env;
-	struct sigaction	sig;
+	pid_t	pid;
+	char	**av;
+	char	**env;
 
 	av = ft_strsplit(command, ' ');
 	env = ft_recreate_env(lenv);
-	pid = fork();
-	if (pid == 0)
+	if (!(pid = fork()))
 	{
-		sig.sa_handler = SIG_DFL;
-		sigaction(SIGINT, &sig, NULL);
+		ft_signal();
 		if (!isexec(av[0]) || execve(av[0], av, env) == -1)
-		{
-			ft_putstr_fd("nsh : ", 2);
-			ft_putstr_fd(av[0], 2);
-			ft_putendl_fd(" : Fichier introuvable ou invalide", 2);
-			exit(EXIT_FAILURE);
-		}
+			ft_error(command, 2);
 	}
 	else
 		endprocess(pid);

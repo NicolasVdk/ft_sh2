@@ -6,15 +6,15 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 13:15:11 by nverdonc          #+#    #+#             */
-/*   Updated: 2014/11/21 21:29:29 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/21 12:53:46 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	ft_next_n(char *str)
+static unsigned int		ft_next_n(char *str)
 {
-	int		i;
+	unsigned int		i;
 
 	i = 0;
 	if (str)
@@ -25,79 +25,30 @@ static int	ft_next_n(char *str)
 	return (i);
 }
 
-static int	ft_end(char **line, char **end)
-{
-	char	*tmp;
-	char	*buf;
-	char	*tmp_buf;
-
-	if (*end != NULL)
-	{
-		buf = ft_strdup(*end);
-		ft_strdel(end);
-		tmp_buf = buf;
-		tmp = ft_strnew(ft_next_n(buf) + 1);
-		*line = tmp;
-		while (*buf && *buf != '\n')
-			*tmp++ = *buf++;
-		if (*buf == '\n')
-		{
-			*end = ft_strdup(buf + 1);
-			free(tmp_buf);
-			return (1);
-		}
-		free(tmp_buf);
-	}
-	return (0);
-}
-
-static int	ft_realloc(char **line, char **end, char *buf)
-{
-	char	*tmp;
-
-	tmp = ft_strnew(ft_strlen(*line) + ft_next_n(buf) + 1);
-	if (*line != NULL)
-	{
-		tmp = ft_strcpy(tmp, *line);
-		ft_strdel(line);
-	}
-	*line = tmp;
-	tmp = tmp + ft_strlen(tmp);
-	while (*buf && *buf != '\n')
-		*tmp++ = *buf++;
-	if (*buf == '\n')
-	{
-		*end = ft_strdup(buf + 1);
-		return (1);
-	}
-	return (0);
-}
-
 int			get_next_line(int const fd, char **line)
 {
 	char			buf[BUFF_SIZE + 1];
 	static	char	*end = NULL;
-	int				error;
+	char			*tmp;
+	char			*tmp_free;
 	int				ret;
 
-	if (fd < 0)
-		return (-1);
-	if ((error = ft_end(line, &end)) == -1)
-		return (-1);
-	else if (error == 1)
-		return (1);
+	*line = NULL;
+	tmp = end;
 	while ((ret = read(fd, buf, BUFF_SIZE)))
 	{
 		buf[ret] = '\0';
-		if ((error = ft_realloc(line, &end, buf)) == -1)
-			return (-1);
-		else if (error == 1)
-			return (1);
+		tmp_free = tmp;
+		tmp = ft_strjoin(tmp, buf);
+		if (tmp_free)
+			ft_strdel(&tmp_free);
+		if (ft_next_n(buf) != ft_strlen(buf))
+			break ;
 	}
-	if (ret == 0 && end != NULL)
-	{
-		ft_strdel(&end);
-		return (1);
-	}
-	return (0);
+	*line = ft_strsub(tmp, 0, ft_next_n(tmp));
+	end = ft_strsub(tmp, ft_next_n(tmp) + 1, ft_strlen(tmp));
+	ft_strdel(&tmp);
+	if (**line == '\0')
+		return (0);
+	return (1);
 }

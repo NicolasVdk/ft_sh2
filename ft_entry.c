@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 01:33:21 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/19 15:52:02 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/21 15:50:18 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,29 +47,23 @@ void	endprocess(pid_t pid)
 
 	status = 0;
 	waitpid(pid, &status, 0);
-}
+ }
 
 void	ft_exec(char *path, char *name, char *command, t_env *lenv)
 {
-	pid_t				pid;
-	char				**av;
-	char				*bin;
-	struct sigaction	sig;
-	char				**env;
+	pid_t	pid;
+	char	**av;
+	char	*bin;
+	char	**env;
 
 	av = ft_strsplit(command, ' ');
 	bin = ft_strpathcat(path, name);
 	env = ft_recreate_env(lenv);
 	if (!(pid = fork()))
 	{
-		sig.sa_handler = SIG_DFL;
-		sigaction(SIGINT, &sig, NULL);
+		ft_signal();
 		if (!isexec(bin) || execve(bin, av, env) == -1)
-		{
-			ft_putstr_fd(av[0], 2);
-			ft_putendl_fd(" : Fichier introuvable ou invalide", 2);
-			exit(EXIT_FAILURE);
-		}
+			ft_error(command, 2);
 	}
 	else
 		endprocess(pid);
@@ -116,19 +110,8 @@ int		ft_entry(char *command, t_env **lenv, char **path)
 	{
 		while (ft_isspace(**commande))
 			(*commande)++;
-		if (ft_strcmp(*commande, "") == 0)
-			return (0);
-		else if (ft_strcmp(*commande, "exit") == 0)
-			exit(1);
-		else if (ft_strncmp(*commande, "./", 2) == 0 || \
-				ft_strncmp(*commande, "/", 1) == 0)
-			ft_basic_process(*commande, *lenv);
-		else if (ft_builtin(*commande, lenv) == 1)
-			(void)*commande;
-		else if (ft_bin(*commande, path, *lenv) == 1)
-			(void)*commande;
-		else
-			return (-1);
+		if (ft_treat(*commande, lenv, path) == -1)
+			ft_error(*commande, 1);
 		commande++;
 	}
 	return (0);
