@@ -84,34 +84,31 @@ void	ft_command_setenv(t_env *lenv, char *commande)
 	ft_strdeld(&command);
 }
 
-t_env	*ft_list_add_env(t_env *lenv, char *env)
+void	ft_command_unsetenv(t_env **lenv, char **command, int ac)
 {
-	t_env	*newelem;
+	t_env	*back;
 	t_env	*tmp;
 
-	newelem = malloc(sizeof(t_env));
-	newelem->elem = ft_strdup(env);
-	newelem->next = NULL;
-	if (lenv == NULL)
-		return (newelem);
-	else
-	{
-		tmp = lenv;
-		while (tmp->next != NULL)
+	back = NULL;
+	tmp = *lenv;
+	if (ac == 2)
+		while (tmp != NULL)
+		{
+			if (ft_strncmp(tmp->elem, command[1], ft_strlen(command[1])) == 0 \
+				&& tmp->elem[ft_strlen(command[1])] == '=')
+			{
+				ft_strdel(&tmp->elem);
+				if (back != NULL)
+					free(back->next);
+				else
+					*lenv = tmp->next;
+				back->next = tmp->next;
+				break ;
+			}
+			back = tmp;
 			tmp = tmp->next;
-		tmp->next = newelem;
-		return (lenv);
-	}
-}
-
-t_env	*ft_list_env(char **env)
-{
-	t_env	*lenv;
-
-	while (*env)
-	{
-		lenv = ft_list_add_env(lenv, *env);
-		env++;
-	}
-	return (lenv);
+		}
+	else
+		ft_putendl_fd("Invalid arguments", 2);
+	ft_strdeld(&command);
 }

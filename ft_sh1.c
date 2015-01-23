@@ -13,18 +13,6 @@
 #include "ft_sh1.h"
 #include "get_next_line.h"
 
-int		ft_isspace(int c)
-{
-	if (c == '\n' || \
-		c == '\v' || \
-		c == '\t' || \
-		c == '\r' || \
-		c == '\f' || \
-		c == ' ')
-		return (1);
-	return (0);
-}
-
 char	*ft_oldpwd_cd(t_env *lenv)
 {
 	if (ft_strcmp(ft_return_env(lenv, "OLDPWD"), "") != 0)

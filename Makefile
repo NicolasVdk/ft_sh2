@@ -18,7 +18,8 @@ SRC			= ft_sh1.c \
 				ft_second.c \
 				ft_verif.c \
 				get_next_line.c \
-				ft_treat.c
+				ft_treat.c \
+				ft_function.c
 OBJ			= $(SRC:.c=.o)
 CC			= /usr/bin/gcc
 CFLAGS		= -Wall -Wextra -Werror

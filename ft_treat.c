@@ -62,11 +62,3 @@ int		ft_treat_file(char *files, char **env)
 		ft_error(files, 3);
 	return (0);
 }
-
-void	ft_signal()
-{
-	struct sigaction	sig;
-
-	sig.sa_handler = SIG_DFL;
-	sigaction(SIGINT, &sig, NULL);
-}

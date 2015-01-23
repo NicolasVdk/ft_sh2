@@ -12,14 +12,6 @@
 
 #include "ft_sh1.h"
 
-int		isexec(char *path)
-{
-	struct stat		buf;
-
-	lstat(path, &buf);
-	return (buf.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
-}
-
 char	**ft_recreate_env(t_env *env)
 {
 	t_env	*tmp;
