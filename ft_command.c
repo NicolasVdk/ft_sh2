@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 05:45:09 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/14 20:41:47 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/26 17:05:38 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,19 @@ void	ft_command_unsetenv(t_env **lenv, char **command, int ac)
 	back = NULL;
 	tmp = *lenv;
 	if (ac == 2)
-		while (tmp != NULL)
+		while (tmp->next != NULL)
 		{
 			if (ft_strncmp(tmp->elem, command[1], ft_strlen(command[1])) == 0 \
 				&& tmp->elem[ft_strlen(command[1])] == '=')
 			{
 				ft_strdel(&tmp->elem);
 				if (back != NULL)
+				{
 					free(back->next);
+					back->next = tmp->next;
+				}
 				else
 					*lenv = tmp->next;
-				back->next = tmp->next;
-				break ;
 			}
 			back = tmp;
 			tmp = tmp->next;

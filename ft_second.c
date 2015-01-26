@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 07:56:33 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/21 15:50:55 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/26 17:06:47 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_env	*ft_list_add_env(t_env *lenv, char *env)
 	t_env	*newelem;
 	t_env	*tmp;
 
-	newelem = malloc(sizeof(t_env));
+	newelem = (t_env *)malloc(sizeof(t_env));
 	newelem->elem = ft_strdup(env);
 	newelem->next = NULL;
 	if (lenv == NULL)
@@ -86,11 +86,15 @@ t_env	*ft_list_add_env(t_env *lenv, char *env)
 t_env	*ft_list_env(char **env)
 {
 	t_env	*lenv;
+	char	**command;
 
 	while (*env)
 	{
 		lenv = ft_list_add_env(lenv, *env);
 		env++;
 	}
+	command = ft_strsplit("unsetenv PS1", ' ');
+	ft_command_unsetenv(&lenv, command, 2);
+	lenv = ft_list_add_env(lenv, "PS1=$>");
 	return (lenv);
 }

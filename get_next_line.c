@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 13:15:11 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/21 12:53:46 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/26 14:41:42 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static unsigned int		ft_next_n(char *str)
 	i = 0;
 	if (str)
 	{
-		while (str[i] != '\0' && str[i] != '\n')
+		while (str[i] && str[i] != '\n')
 			i++;
 	}
 	return (i);
@@ -48,7 +48,7 @@ int			get_next_line(int const fd, char **line)
 	*line = ft_strsub(tmp, 0, ft_next_n(tmp));
 	end = ft_strsub(tmp, ft_next_n(tmp) + 1, ft_strlen(tmp));
 	ft_strdel(&tmp);
-	if (**line == '\0')
-		return (0);
-	return (1);
+	if ((*line && **line) || *buf == '\n')
+		return (1);
+	return (0);
 }

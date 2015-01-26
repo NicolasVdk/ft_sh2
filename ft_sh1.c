@@ -6,7 +6,7 @@
 /*   By: nverdonc <nverdonc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 21:03:00 by nverdonc          #+#    #+#             */
-/*   Updated: 2015/01/21 12:56:04 by nverdonc         ###   ########.fr       */
+/*   Updated: 2015/01/26 17:09:44 by nverdonc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,22 @@ void	ft_sh1(char **env, int	fd)
 {
 	char	*buf;
 	char	**path;
+	int		ret;
 	t_env	*lenv;
 
 	buf = NULL;
 	lenv = ft_list_env(env);
-	ft_command_setenv(lenv, "setenv PS1 $>");
-	path = ft_strsplit(ft_return_env(lenv, "PATH"), ':');
-	fd == 0 ? ft_putps1(ft_return_env(lenv, "PS1"), lenv) : 1;
-	while (get_next_line(fd, &buf) || !(*buf))
+	while (1)
 	{
-		ft_entry(buf, &lenv, path);
-		fd == 0 ? ft_putps1(ft_return_env(lenv, "PS1"), lenv) : 1;
-		ft_strdeld(&path);
 		path = ft_strsplit(ft_return_env(lenv, "PATH"), ':');
+		fd == 0 ? ft_putps1(ft_return_env(lenv, "PS1"), lenv) : 1;
+		while ((ret = get_next_line(fd, &buf)) == -1)
+			;
+		if (!ret)
+			return ;
+		if (buf)
+			ft_entry(buf, &lenv, path);
+		ft_strdeld(&path);
 		ft_strdel(&buf);
 	}
 }
